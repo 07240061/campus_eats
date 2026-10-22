@@ -3,12 +3,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const { connectMongo } = require('./config/mongo');
-connectMongo().catch(err => console.error('MongoDB connection failed:', err));
-
-
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // View engine
 app.set('view engine', 'ejs');
@@ -37,10 +32,7 @@ app.use((req, res, next) => {
 const indexRoutes = require('./routes/index');
 app.use('/', indexRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Campus Eats running at http://localhost:${PORT}`);
-});
-
 const apiRoutes = require('./routes/api');
 app.use('/api', apiRoutes);
 
+module.exports = app;
