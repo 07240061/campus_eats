@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
+const db = require('./config/db');
 
 // View engine
 app.set('view engine', 'ejs');
@@ -14,8 +15,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const session = require('express-session');
+const PgSession = require('connect-pg-simple')(session);
 
 app.use(session({
+  store: new PgSession({
+    pgPromise: db,
+    tableName: 'user_sessions',
+    createTableIfMissing: true,
+  }),
   secret: process.env.SESSION_SECRET || 'campus-eats-dev-secret',
   resave: false,
   saveUninitialized: false,
